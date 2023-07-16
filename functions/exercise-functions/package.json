@@ -1,0 +1,25 @@
+{
+  "name": "exercise-creator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx tsc && npx concurrently \"functions-framework --source dist --target create-exercise --port 9000\" \"functions-framework --source dist --target check-exercise --port 9001\" \"functions-framework --source dist --target user --port 9002\" \"functions-framework --source dist --target update-nick --port 9003\" \"functions-framework --source dist --target token --port 9004\" \"functions-framework --source dist --target refresh --port 9005\""
+  },
+  "author": "Mikael Holm",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.2.0",
+    "dotenv": "^16.0.3",
+    "express-validator": "^7.0.1",
+    "google-auth-library": "^8.8.0",
+    "pg": "^8.11.0"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/pg": "^8.10.1",
+    "concurrently": "^8.2.0",
+    "typescript": "^5.0.4"
+  }
+}
