@@ -19,6 +19,9 @@ export const resources = {
         frontPage: 'Etusivu',
         unitConversion: 'Yksikkömuunnokset',
       },
+      navigation: {
+        title: 'Tehtäväalusta',
+      },
       views: {
         unitConversion: {
           title: 'Yksikkömuunnokset',
@@ -38,10 +41,20 @@ export const resources = {
             title: 'Pituus',
             info: 'Muunna suluissa olevaan yksikköön. Muista, että pituuksien suhdeluku on 10. Kerro lukua 10:llä, mikäli muunnat pienempään yksikköön. Jaa lukua 10:llä, mikäli muunnat suurempaan yksikköön.',
           },
+          area: {
+            title: 'Pinta-ala',
+            info: 'Muunna suluissa olevaan yksikköön. Muista, että pinta-alojen suhdeluku on 100. Kerro lukua 100:lla, mikäli muunnat pienempään yksikköön. Jaa lukua 100:lla, mikäli muunnat suurempaan yksikköön.',
+          },
+          volume: {
+            title: 'Tilavuus',
+            info: 'Muunna suluissa olevaan yksikköön. Muista, että tilavuuksien suhdeluku on 1000. Kerro lukua 1000:lla, mikäli muunnat pienempään yksikköön. Jaa lukua 1000:lla, mikäli muunnat suurempaan yksikköön.',
+          },
           common: {
             checkAnswer: 'Tarkista vastaus',
             correctAnswer: 'Oikein!',
             wrongAnswer: 'Väärä vastaus, yritä uudelleen!',
+            wrongFormat:
+              'Tarkista, että olet kirjoittanut vastauksesi oikein. Vain numerot hyväksytään!',
           },
         },
       },

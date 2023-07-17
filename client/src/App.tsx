@@ -12,7 +12,7 @@ const App = () => {
     <ThemeProvider theme={mainTheme}>
       <CssBaseline />
       <SnackbarProvider
-        anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <MainProvider>
           <AuthProvider>

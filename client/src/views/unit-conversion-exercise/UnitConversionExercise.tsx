@@ -9,7 +9,7 @@ import { Box, Button, Paper, Typography, TextField } from '@mui/material'
 import { CreateExerciseResponse, createExercise, checkExercise } from 'api'
 import { useSnackbar } from 'notistack'
 
-const DIGIT_REGEX = /^(\d+|\d+\.\d+|\d+,\d+)$/
+const DIGIT_REGEX = /^\s*(\d+|\d+\.\d+|\d+,\d+)\s*$/
 
 const SUPERSCRIPT = Object.freeze({
   two: 0x00b2,
@@ -48,6 +48,9 @@ const UnitConversionExercise = () => {
       checkIfAnswerIsCorrect(exerciseId, numericAnswer)
       setInputError(false)
     } else {
+      enqueueSnackbar(t('views.unitConversionExercise.common.wrongFormat'), {
+        variant: 'error',
+      })
       setInputError(true)
     }
   }
