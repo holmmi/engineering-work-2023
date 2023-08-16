@@ -1,3 +1,5 @@
 node_modules/
 dist/
 .env
+*.tfvars
+infra/service_account.json
