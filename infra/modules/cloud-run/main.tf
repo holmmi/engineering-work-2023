@@ -1,5 +1,5 @@
 resource "google_cloud_run_v2_service" "frontend_service" {
-  name = "frontend-service"
+  name    = "frontend-service"
   ingress = "INGRESS_TRAFFIC_ALL"
 
   template {
@@ -12,9 +12,9 @@ resource "google_cloud_run_v2_service" "frontend_service" {
 
       startup_probe {
         initial_delay_seconds = 0
-        timeout_seconds = 1
-        period_seconds = 10
-        failure_threshold = 3
+        timeout_seconds       = 1
+        period_seconds        = 10
+        failure_threshold     = 3
         http_get {
           path = "/"
         }
@@ -22,9 +22,9 @@ resource "google_cloud_run_v2_service" "frontend_service" {
 
       liveness_probe {
         initial_delay_seconds = 0
-        timeout_seconds = 1
-        period_seconds = 10
-        failure_threshold = 3
+        timeout_seconds       = 1
+        period_seconds        = 10
+        failure_threshold     = 3
         http_get {
           path = "/"
         }
@@ -35,15 +35,15 @@ resource "google_cloud_run_v2_service" "frontend_service" {
     }
     vpc_access {
       connector = var.vpc_connector_id
-      egress = "PRIVATE_RANGES_ONLY"
+      egress    = "PRIVATE_RANGES_ONLY"
     }
     service_account = var.docker_service_account_email
   }
 }
 
 resource "google_compute_region_network_endpoint_group" "frontend_service_neg" {
-  name = "frontend-service-neg"
-  region = var.region
+  name                  = "frontend-service-neg"
+  region                = var.region
   network_endpoint_type = "SERVERLESS"
   cloud_run {
     service = google_cloud_run_v2_service.frontend_service.name
@@ -51,44 +51,44 @@ resource "google_compute_region_network_endpoint_group" "frontend_service_neg" {
 }
 
 resource "google_cloud_run_v2_job" "flyway_migrations" {
-    name = "flyway-migrations"
+  name = "flyway-migrations"
 
+  template {
     template {
-     template {
-       containers {
-         image = "${var.docker_repository_path}/flyway"
+      containers {
+        image = "${var.docker_repository_path}/flyway"
 
-         env {
-           name = "FLYWAY_USER"
-           value = "root"
-         }
-         env {
-           name = "FLYWAY_PASSWORD"
-           value_source {
-             secret_key_ref {
-               secret = var.database_connection_details.password
-               version = "latest"
-             }
-           }
-         }
-         env {
-           name = "FLYWAY_URL"
-           value = var.database_connection_details.url
-         }
-       }
-       service_account = var.docker_service_account_email
-       vpc_access {
-         connector = var.vpc_connector_id
-         egress = "PRIVATE_RANGES_ONLY"
-       }
-       max_retries = 1
-     }
-     task_count = 1
+        env {
+          name  = "FLYWAY_USER"
+          value = "root"
+        }
+        env {
+          name = "FLYWAY_PASSWORD"
+          value_source {
+            secret_key_ref {
+              secret  = var.database_connection_details.password
+              version = "latest"
+            }
+          }
+        }
+        env {
+          name  = "FLYWAY_URL"
+          value = var.database_connection_details.url
+        }
+      }
+      service_account = var.docker_service_account_email
+      vpc_access {
+        connector = var.vpc_connector_id
+        egress    = "PRIVATE_RANGES_ONLY"
+      }
+      max_retries = 1
     }
+    task_count = 1
+  }
 
-    lifecycle {
-        ignore_changes = [
-        launch_stage,
-        ]
-    }
+  lifecycle {
+    ignore_changes = [
+      launch_stage,
+    ]
+  }
 }

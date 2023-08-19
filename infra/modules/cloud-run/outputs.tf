@@ -1,4 +1,4 @@
 output "network_endpoint_group" {
-    value = google_compute_region_network_endpoint_group.frontend_service_neg.id
-    description = "Cloud Run service NEG"
+  value       = google_compute_region_network_endpoint_group.frontend_service_neg.id
+  description = "Cloud Run service NEG"
 }

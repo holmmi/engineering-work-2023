@@ -1,4 +1,4 @@
 variable "vpc_network_id" {
-  type = string
+  type        = string
   description = "VPC network that is associated with database"
 }

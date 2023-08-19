@@ -1,25 +1,25 @@
 variable "gcp_project" {
   type = object({
     region = string
-    zone = string
+    zone   = string
   })
   default = {
     region = "europe-north1"
-    zone = "europe-north1-a"
+    zone   = "europe-north1-a"
   }
   description = "GCP project details"
 }
 
 variable "oauth2_config" {
   type = object({
-    client_id = string
+    client_id     = string
     client_secret = string
   })
-  sensitive = true
+  sensitive   = true
   description = "OAuth2 configuration"
 }
 
 variable "domain" {
-  type = string
+  type        = string
   description = "A domain where SSL certificate will be issued"
 }

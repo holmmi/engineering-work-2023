@@ -1,5 +1,9 @@
+# Node and TS
 node_modules/
 dist/
 .env
+
+# Terraform
 *.tfvars
 infra/service_account.json
+.terraform
