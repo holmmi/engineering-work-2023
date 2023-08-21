@@ -7,3 +7,4 @@ dist/
 *.tfvars
 infra/service_account.json
 .terraform
+tfplan

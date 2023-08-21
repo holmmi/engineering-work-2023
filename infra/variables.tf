@@ -1,12 +1,8 @@
 variable "gcp_project" {
   type = object({
-    region = string
-    zone   = string
+    project = string
+    region  = string
   })
-  default = {
-    region = "europe-north1"
-    zone   = "europe-north1-a"
-  }
   description = "GCP project details"
 }
 

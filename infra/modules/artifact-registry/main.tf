@@ -21,5 +21,6 @@ data "google_iam_policy" "artifact_registry_admin" {
 
 resource "google_artifact_registry_repository_iam_policy" "policy" {
   repository  = google_artifact_registry_repository.docker_repository.name
+  location    = google_artifact_registry_repository.docker_repository.location
   policy_data = data.google_iam_policy.artifact_registry_admin.policy_data
 }

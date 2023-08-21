@@ -58,6 +58,7 @@ resource "google_secret_manager_secret" "database_root_password" {
 resource "google_secret_manager_secret_version" "root_password" {
   secret      = google_secret_manager_secret.database_root_password.id
   secret_data = google_sql_database_instance.database_instance.root_password
+  depends_on  = [google_sql_database_instance.database_instance]
 }
 
 resource "google_secret_manager_secret" "database_application_password" {
@@ -71,4 +72,5 @@ resource "google_secret_manager_secret" "database_application_password" {
 resource "google_secret_manager_secret_version" "database_application_password" {
   secret      = google_secret_manager_secret.database_application_password.id
   secret_data = random_password.application_user_password.result
+  depends_on  = [random_password.application_user_password]
 }
