@@ -2,10 +2,11 @@
   "name": "exercise-creator",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx tsc && npx concurrently \"functions-framework --source dist --target create-exercise --port 9000\" \"functions-framework --source dist --target check-exercise --port 9001\" \"functions-framework --source dist --target user --port 9002\" \"functions-framework --source dist --target update-nick --port 9003\" \"functions-framework --source dist --target token --port 9004\" \"functions-framework --source dist --target refresh --port 9005\""
+    "dev:start": "npx tsc && npx concurrently \"functions-framework --target create-exercise --port 9000\" \"functions-framework --source dist --target check-exercise --port 9001\" \"functions-framework --source dist --target user --port 9002\" \"functions-framework --source dist --target update-nick --port 9003\" \"functions-framework --source dist --target token --port 9004\" \"functions-framework --source dist --target refresh --port 9005\"",
+    "gcp-build": "npm install && npx tsc"
   },
   "author": "Mikael Holm",
   "license": "ISC",

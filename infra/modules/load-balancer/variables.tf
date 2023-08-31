@@ -1,8 +1,3 @@
-variable "vpc_network" {
-  type        = string
-  description = "VPC network where the load balancer belongs to"
-}
-
 variable "domain" {
   type        = string
   description = "A domain name where SSL certificates will be created"

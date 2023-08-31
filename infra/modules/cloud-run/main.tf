@@ -1,10 +1,11 @@
 resource "google_cloud_run_v2_service" "frontend_service" {
-  name    = "frontend-service"
-  ingress = "INGRESS_TRAFFIC_ALL"
+  name     = "frontend-service"
+  location = var.region
+  ingress  = "INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER"
 
   template {
     containers {
-      image = "${var.docker_repository_path}/exercise-platform-frontend"
+      image = "${var.docker_repository_path}/math-platform-frontend"
 
       ports {
         container_port = 8080
@@ -41,6 +42,13 @@ resource "google_cloud_run_v2_service" "frontend_service" {
   }
 }
 
+resource "google_cloud_run_v2_service_iam_member" "invoker" {
+  location = google_cloud_run_v2_service.frontend_service.location
+  name     = google_cloud_run_v2_service.frontend_service.name
+  role     = "roles/run.invoker"
+  member   = "allUsers"
+}
+
 resource "google_compute_region_network_endpoint_group" "frontend_service_neg" {
   name                  = "frontend-service-neg"
   region                = var.region
@@ -51,7 +59,8 @@ resource "google_compute_region_network_endpoint_group" "frontend_service_neg" {
 }
 
 resource "google_cloud_run_v2_job" "flyway_migrations" {
-  name = "flyway-migrations"
+  name     = "flyway-migrations"
+  location = var.region
 
   template {
     template {
@@ -60,7 +69,7 @@ resource "google_cloud_run_v2_job" "flyway_migrations" {
 
         env {
           name  = "FLYWAY_USER"
-          value = "root"
+          value = var.database_connection_details.user
         }
         env {
           name = "FLYWAY_PASSWORD"
@@ -76,7 +85,9 @@ resource "google_cloud_run_v2_job" "flyway_migrations" {
           value = var.database_connection_details.url
         }
       }
+
       service_account = var.docker_service_account_email
+
       vpc_access {
         connector = var.vpc_connector_id
         egress    = "PRIVATE_RANGES_ONLY"

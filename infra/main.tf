@@ -1,3 +1,8 @@
+resource "google_project_service" "gcp_services" {
+  for_each = toset(var.gcp_service_list)
+  service  = each.key
+}
+
 module "artifact_registry" {
   source = "./modules/artifact-registry"
 
@@ -14,12 +19,10 @@ module "database" {
   vpc_network_id = module.network.vpc_network_id
 }
 
-data "google_project" "project" {}
-
 module "cloud_run" {
   source = "./modules/cloud-run"
 
-  docker_repository_path       = "${var.gcp_project.region}-docker.pkg.dev/${data.google_project.project.project_id}/${module.artifact_registry.docker_repository_name}"
+  docker_repository_path       = "${var.gcp_project.region}-docker.pkg.dev/${var.gcp_project.project}/${module.artifact_registry.docker_repository_name}"
   docker_service_account_email = module.artifact_registry.docker_service_account_email
   vpc_connector_id             = module.network.vpc_access_connector_id
   database_connection_details = {
@@ -38,7 +41,7 @@ module "functions" {
     port     = "5432"
     database = module.database.database_name
     user     = module.database.database_user
-    password = module.database.database_password
+    password = module.database.database_password_secret_manager_id
   }
   oauth2_config = {
     client_id     = var.oauth2_config.client_id
@@ -51,7 +54,6 @@ module "functions" {
 module "load_balancer" {
   source = "./modules/load-balancer"
 
-  vpc_network = module.network.vpc_network_id
   domain      = var.domain
   cloud_function_negs = {
     exercise_checker = module.functions.exercise_checker_neg

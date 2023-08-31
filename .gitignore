@@ -6,5 +6,6 @@ dist/
 # Terraform
 *.tfvars
 infra/service_account.json
+infra/archive
 .terraform
 tfplan

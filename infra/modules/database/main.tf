@@ -1,16 +1,17 @@
-resource "random_id" "database_instance_id" {
+resource "random_id" "database_instance_suffix" {
   byte_length = 4
 }
 
 resource "google_sql_database_instance" "database_instance" {
-  name             = "database-instance-${random_id.database_instance_id.id}"
+  name             = "database-instance-${random_id.database_instance_suffix.hex}"
   database_version = "POSTGRES_15"
 
   settings {
     tier = "db-f1-micro"
 
     ip_configuration {
-      require_ssl     = true
+      require_ssl     = false
+      ipv4_enabled    = false
       private_network = var.vpc_network_id
     }
 
@@ -47,20 +48,6 @@ resource "google_sql_user" "application_user" {
   type     = "BUILT_IN"
 }
 
-resource "google_secret_manager_secret" "database_root_password" {
-  secret_id = "database-root-password"
-
-  replication {
-    automatic = true
-  }
-}
-
-resource "google_secret_manager_secret_version" "root_password" {
-  secret      = google_secret_manager_secret.database_root_password.id
-  secret_data = google_sql_database_instance.database_instance.root_password
-  depends_on  = [google_sql_database_instance.database_instance]
-}
-
 resource "google_secret_manager_secret" "database_application_password" {
   secret_id = "database-application-password"
 
@@ -72,5 +59,4 @@ resource "google_secret_manager_secret" "database_application_password" {
 resource "google_secret_manager_secret_version" "database_application_password" {
   secret      = google_secret_manager_secret.database_application_password.id
   secret_data = random_password.application_user_password.result
-  depends_on  = [random_password.application_user_password]
 }

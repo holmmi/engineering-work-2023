@@ -19,3 +19,21 @@ variable "domain" {
   type        = string
   description = "A domain where SSL certificate will be issued"
 }
+
+variable "gcp_service_list" {
+  description = "List of APIs necessary for the project"
+  type        = list(string)
+  default = [
+    "cloudresourcemanager.googleapis.com",
+    "artifactregistry.googleapis.com",
+    "iam.googleapis.com",
+    "secretmanager.googleapis.com",
+    "compute.googleapis.com",
+    "vpcaccess.googleapis.com",
+    "servicenetworking.googleapis.com",
+    "sqladmin.googleapis.com",
+    "run.googleapis.com",
+    "cloudfunctions.googleapis.com",
+    "cloudbuild.googleapis.com"
+  ]
+}
