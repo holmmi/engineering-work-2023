@@ -1,9 +1,10 @@
-#!/usr/bin/bash
+#!/usr/bin/env sh
 
 BUCKET=$1
 PREFIX="terraform/state"
 
-if [ -z "$BUCKET" ]; then
+if [[ -z "$BUCKET" ]]
+then
     echo "Please provide a bucket name as an argument"
     exit 1
 fi
