@@ -39,6 +39,7 @@ jobs:
         run: |
           echo ${{ secrets.TERRAFORM_SERVICE_ACCOUNT }} > service_account.json
           echo ${{ secrets.TERRAFORM_VARIABLES }} > environment.auto.tfvars
+          ls -l
           ./init.sh $BUCKET
       - name: Terraform validate
         working-directory: './infra'
