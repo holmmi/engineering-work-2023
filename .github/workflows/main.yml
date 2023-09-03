@@ -37,7 +37,8 @@ jobs:
         run: |
           echo ${{ secrets.TERRAFORM_SERVICE_ACCOUNT }} > service_account.json
           echo ${{ secrets.TERRAFORM_VARIABLES }} > environment.auto.tfvars
-          ./init ${{ secrets.TERRAFORM_STATE_BUCKET }}
+          chmod +x init.sh
+          ./init.sh ${{ secrets.TERRAFORM_STATE_BUCKET }}
       - name: Terraform validate
         working-directory: './infra'
         run: terraform validate -no-color
