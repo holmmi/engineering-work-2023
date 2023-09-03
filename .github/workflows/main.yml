@@ -1,0 +1,70 @@
+name: Main workflow
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    environment: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build frontend and its Docker image
+        working-directory: ./client
+        run: |
+          cat ${{ secrets.FRONTEND_CONFIG }} > .env
+          npm install
+          npm run build
+          docker build -t math-platform-frontend .
+      - name: Build Flyway Docker image
+        working-directory: ./flyway
+        run: docker build -t flyway .
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+      - name: Terraform format
+        working-directory: ./infra
+        run: terraform fmt -recursive -check
+      - name: Google Authentication
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: ${{ secrets.TERRAFORM_SERVICE_ACCOUNT }}
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+      - name: Initialize Terraform
+        working-directory: './infra'
+        run: |
+          cat ${{ secrets.TERRAFORM_SERVICE_ACCOUNT }} > service_account.json
+          cat ${{ secrets.TERRAFORM_VARIABLES }} > environment.auto.tfvars
+          ./init ${{ secrets.TERRAFORM_STATE_BUCKET }}
+      - name: Terraform validate
+        working-directory: './infra'
+        run: terraform validate -no-color
+      - name: Check Artifact Registry existence
+        id: artifact_registry
+        working-directory: './infra'
+        run: terraform plan -lock=true -target=module.artifact_registry -out=tfplan -detailed-exitcode -no-color
+      - name: Create Artifact Registry
+        working-directory: ./infra
+        if: ${{ steps.artifact_registry.outputs.exitcode != '0' }}
+        run: terraform apply -lock=true -no-color "tfplan"
+      - name: Push Docker images
+        working-directory: ./infra
+        run: |
+          gcloud auth configure-docker eu-north1-docker.pkg.dev
+          terraform output -raw docker_service_account_key | docker login -u _json_key_base64 --password-stdin https://eu-north1-docker.pkg.dev
+          docker tag flyway europe-north1-docker.pkg.dev/mikael-holm-sandbox-v2/docker-repository/flyway
+          docker tag math-platform-frontend europe-north1-docker.pkg.dev/mikael-holm-sandbox-v2/docker-repository/math-platform-frontend
+          docker push europe-north1-docker.pkg.dev/mikael-holm-sandbox-v2/docker-repository/flyway
+          docker push europe-north1-docker.pkg.dev/mikael-holm-sandbox-v2/docker-repository/math-platform-frontend
+      - name: Terraform plan
+        id: terraform_plan
+        working-directory: ./infra
+        run: terraform plan -lock=true -out=tfplan -detailed-exitcode -no-color
+      - name: Terraform apply
+        working-directory: ./infra
+        if: ${{ steps.terraform_plan.outputs.exitcode != '0' }}
+        run: terraform apply -lock=true -no-color "tfplan"
+      - name: Run Flyway migrations
+        run: gcloud run jobs execute flyway-migrations --wait

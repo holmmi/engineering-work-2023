@@ -97,9 +97,9 @@ resource "google_cloudfunctions2_function" "exercise_creator" {
 
 resource "google_cloud_run_v2_service_iam_member" "exercise_creator_invoker" {
   location = google_cloudfunctions2_function.exercise_creator.location
-  name = google_cloudfunctions2_function.exercise_creator.name
-  role = "roles/run.invoker"
-  member = "allUsers"
+  name     = google_cloudfunctions2_function.exercise_creator.name
+  role     = "roles/run.invoker"
+  member   = "allUsers"
 }
 
 resource "google_compute_region_network_endpoint_group" "exercise_creator_neg" {
@@ -159,9 +159,9 @@ resource "google_cloudfunctions2_function" "exercise_checker" {
 
 resource "google_cloud_run_v2_service_iam_member" "exercise_checker_invoker" {
   location = google_cloudfunctions2_function.exercise_checker.location
-  name = google_cloudfunctions2_function.exercise_checker.name
-  role = "roles/run.invoker"
-  member = "allUsers"
+  name     = google_cloudfunctions2_function.exercise_checker.name
+  role     = "roles/run.invoker"
+  member   = "allUsers"
 }
 
 resource "google_compute_region_network_endpoint_group" "exercise_checker_neg" {
@@ -221,9 +221,9 @@ resource "google_cloudfunctions2_function" "user" {
 
 resource "google_cloud_run_v2_service_iam_member" "user_invoker" {
   location = google_cloudfunctions2_function.user.location
-  name = google_cloudfunctions2_function.user.name
-  role = "roles/run.invoker"
-  member = "allUsers"
+  name     = google_cloudfunctions2_function.user.name
+  role     = "roles/run.invoker"
+  member   = "allUsers"
 }
 
 resource "google_compute_region_network_endpoint_group" "user_neg" {
@@ -283,9 +283,9 @@ resource "google_cloudfunctions2_function" "token_creator" {
 
 resource "google_cloud_run_v2_service_iam_member" "token_creator_invoker" {
   location = google_cloudfunctions2_function.token_creator.location
-  name = google_cloudfunctions2_function.token_creator.name
-  role = "roles/run.invoker"
-  member = "allUsers"
+  name     = google_cloudfunctions2_function.token_creator.name
+  role     = "roles/run.invoker"
+  member   = "allUsers"
 }
 
 resource "google_compute_region_network_endpoint_group" "token_creator_neg" {
@@ -345,9 +345,9 @@ resource "google_cloudfunctions2_function" "token_refresher" {
 
 resource "google_cloud_run_v2_service_iam_member" "token_refresher_invoker" {
   location = google_cloudfunctions2_function.token_refresher.location
-  name = google_cloudfunctions2_function.token_refresher.name
-  role = "roles/run.invoker"
-  member = "allUsers"
+  name     = google_cloudfunctions2_function.token_refresher.name
+  role     = "roles/run.invoker"
+  member   = "allUsers"
 }
 
 resource "google_compute_region_network_endpoint_group" "token_refresher_neg" {

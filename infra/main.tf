@@ -54,7 +54,7 @@ module "functions" {
 module "load_balancer" {
   source = "./modules/load-balancer"
 
-  domain      = var.domain
+  domain = var.domain
   cloud_function_negs = {
     exercise_checker = module.functions.exercise_checker_neg
     exercise_creator = module.functions.exercise_creator_neg
