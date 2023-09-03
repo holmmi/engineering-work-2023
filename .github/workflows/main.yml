@@ -36,6 +36,7 @@ jobs:
         env:
           BUCKET: ${{ secrets.TERRAFORM_STATE_BUCKET }}
         working-directory: './infra'
+        shell: bash
         run: |
           echo ${{ secrets.TERRAFORM_SERVICE_ACCOUNT }} > service_account.json
           echo ${{ secrets.TERRAFORM_VARIABLES }} > environment.auto.tfvars

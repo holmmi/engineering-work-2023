@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 BUCKET=$1
 PREFIX="terraform/state"
@@ -10,5 +10,6 @@ then
 fi
 
 terraform init \
+    -no-color \
     -backend-config="bucket=$BUCKET" \
     -backend-config="prefix=$PREFIX"
