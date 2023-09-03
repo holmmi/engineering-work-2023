@@ -33,12 +33,14 @@ jobs:
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v1
       - name: Initialize Terraform
+        env:
+          BUCKET: ${{ secrets.TERRAFORM_STATE_BUCKET }}
         working-directory: './infra'
         run: |
           echo ${{ secrets.TERRAFORM_SERVICE_ACCOUNT }} > service_account.json
           echo ${{ secrets.TERRAFORM_VARIABLES }} > environment.auto.tfvars
           chmod +x init.sh
-          ./init.sh ${{ secrets.TERRAFORM_STATE_BUCKET }}
+          ./init.sh $BUCKET
       - name: Terraform validate
         working-directory: './infra'
         run: terraform validate -no-color

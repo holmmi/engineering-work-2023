@@ -51,6 +51,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@craco/craco": "^7.1.0",
     "@types/craco__craco": "^6.4.0",
     "@types/http-proxy-middleware": "^1.0.0",
