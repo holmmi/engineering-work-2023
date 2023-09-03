@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 
 BUCKET=$1
 PREFIX="terraform/state"
