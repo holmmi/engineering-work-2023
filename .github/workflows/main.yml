@@ -14,7 +14,7 @@ jobs:
       - name: Build frontend and its Docker image
         working-directory: ./client
         run: |
-          cat ${{ secrets.FRONTEND_CONFIG }} > .env
+          echo ${{ secrets.FRONTEND_CONFIG }} > .env
           npm install
           npm run build
           docker build -t math-platform-frontend .
@@ -35,8 +35,8 @@ jobs:
       - name: Initialize Terraform
         working-directory: './infra'
         run: |
-          cat ${{ secrets.TERRAFORM_SERVICE_ACCOUNT }} > service_account.json
-          cat ${{ secrets.TERRAFORM_VARIABLES }} > environment.auto.tfvars
+          echo ${{ secrets.TERRAFORM_SERVICE_ACCOUNT }} > service_account.json
+          echo ${{ secrets.TERRAFORM_VARIABLES }} > environment.auto.tfvars
           ./init ${{ secrets.TERRAFORM_STATE_BUCKET }}
       - name: Terraform validate
         working-directory: './infra'
