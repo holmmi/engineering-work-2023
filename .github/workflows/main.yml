@@ -43,7 +43,7 @@ jobs:
         run: |
           echo "$TERRAFORM_SERVICE_ACCOUNT" > service_account.json
           echo "$TERRAFORM_VARIABLES" > environment.auto.tfvars
-          ./init "$GCS_BUCKET"
+          ./init.sh "$GCS_BUCKET"
       - name: Terraform validate
         working-directory: './infra'
         run: terraform validate -no-color
