@@ -45,11 +45,11 @@ jobs:
           echo "$TERRAFORM_VARIABLES" > environment.auto.tfvars
           ./init.sh "$GCS_BUCKET"
       - name: Terraform validate
-        working-directory: './infra'
+        working-directory: ./infra
         run: terraform validate -no-color
       - name: Check Artifact Registry existence
         id: artifact_registry
-        working-directory: './infra'
+        working-directory: ./infra
         run: terraform plan -lock=true -target=module.artifact_registry -out=tfplan -detailed-exitcode -no-color
       - name: Create Artifact Registry
         working-directory: ./infra
@@ -58,7 +58,7 @@ jobs:
       - name: Push Docker images
         working-directory: ./infra
         run: |
-          gcloud auth configure-docker eu-north1-docker.pkg.dev
+          gcloud auth configure-docker europe-north1-docker.pkg.dev
           terraform output -raw docker_service_account_key | docker login -u _json_key_base64 --password-stdin https://eu-north1-docker.pkg.dev
           docker tag flyway europe-north1-docker.pkg.dev/mikael-holm-sandbox-v2/docker-repository/flyway
           docker tag math-platform-frontend europe-north1-docker.pkg.dev/mikael-holm-sandbox-v2/docker-repository/math-platform-frontend
