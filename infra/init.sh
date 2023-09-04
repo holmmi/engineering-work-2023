@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-BUCKET=$1
+BUCKET="$1"
 PREFIX="terraform/state"
 
 if [[ -z "$BUCKET" ]]
