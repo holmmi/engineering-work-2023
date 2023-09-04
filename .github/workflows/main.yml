@@ -13,8 +13,10 @@ jobs:
         uses: actions/checkout@v3
       - name: Build frontend and its Docker image
         working-directory: ./client
+        env:
+          FRONTEND_CONFIG: ${{ secrets.FRONTEND_CONFIG }}
         run: |
-          echo ${{ secrets.FRONTEND_CONFIG }} > .env
+          echo "$FRONTEND_CONFIG" > .env
           npm install
           npm run build
           docker build -t math-platform-frontend .
@@ -34,12 +36,14 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
       - name: Initialize Terraform
         env:
-          BUCKET: ${{ secrets.TERRAFORM_STATE_BUCKET }}
+          GCS_BUCKET: ${{ secrets.TERRAFORM_STATE_BUCKET }}
+          TERRAFORM_SERVICE_ACCOUNT: ${{ secrets.TERRAFORM_SERVICE_ACCOUNT }}
+          TERRAFORM_VARIABLES: ${{ secrets.TERRAFORM_VARIABLES }}
         working-directory: './infra'
         run: |
-          echo ${{ secrets.TERRAFORM_SERVICE_ACCOUNT }} > service_account.json
-          echo ${{ secrets.TERRAFORM_VARIABLES }} > environment.auto.tfvars
-          bash init.sh $BUCKET
+          echo "$TERRAFORM_SERVICE_ACCOUNT" > service_account.json
+          echo "$TERRAFORM_VARIABLES" > environment.auto.tfvars
+          ./init "$GCS_BUCKET"
       - name: Terraform validate
         working-directory: './infra'
         run: terraform validate -no-color
