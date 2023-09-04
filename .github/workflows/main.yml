@@ -39,7 +39,7 @@ jobs:
           GCS_BUCKET: ${{ secrets.TERRAFORM_STATE_BUCKET }}
           TERRAFORM_SERVICE_ACCOUNT: ${{ secrets.TERRAFORM_SERVICE_ACCOUNT }}
           TERRAFORM_VARIABLES: ${{ secrets.TERRAFORM_VARIABLES }}
-        working-directory: './infra'
+        working-directory: ./infra
         run: |
           echo "$TERRAFORM_SERVICE_ACCOUNT" > service_account.json
           echo "$TERRAFORM_VARIABLES" > environment.auto.tfvars
