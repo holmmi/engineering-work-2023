@@ -11,6 +11,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Google Authentication
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: ${{ secrets.TERRAFORM_SERVICE_ACCOUNT }}
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
       - name: Terraform format
