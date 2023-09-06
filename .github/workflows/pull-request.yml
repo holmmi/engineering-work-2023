@@ -1,0 +1,49 @@
+name: Pull request workflow
+on:
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  pull_request:
+    environment: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+      - name: Terraform format
+        working-directory: ./infra
+        run: terraform fmt -recursive -check
+      - name: Initialize Terraform
+        env:
+          GCS_BUCKET: ${{ secrets.TERRAFORM_STATE_BUCKET }}
+          TERRAFORM_SERVICE_ACCOUNT: ${{ secrets.TERRAFORM_SERVICE_ACCOUNT }}
+          TERRAFORM_VARIABLES: ${{ secrets.TERRAFORM_VARIABLES }}
+        working-directory: ./infra
+        run: |
+          echo "$TERRAFORM_SERVICE_ACCOUNT" > service_account.json
+          echo "$TERRAFORM_VARIABLES" > environment.auto.tfvars
+          ./init.sh "$GCS_BUCKET"
+      - name: Terraform plan
+        id: terraform_plam
+        working-directory: ./infra
+        continue-on-error: true
+        run: terraform plan -lock=true -no-color
+      - name: Post Terraform plan result as a comment
+        env:
+          PLAN_RESULT: ${{ steps.terraform_plan.outputs.stdout }}
+        uses: actions/github-script@v6
+        with:
+          retries: 3
+          script: |
+            const { PLAN_RESULT } = process.env 
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `${PLAN_RESULT}`
+            })
+        
