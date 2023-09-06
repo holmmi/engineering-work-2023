@@ -31,7 +31,7 @@ jobs:
           echo "$TERRAFORM_VARIABLES" > environment.auto.tfvars
           ./init.sh "$GCS_BUCKET"
       - name: Terraform plan
-        id: terraform_plam
+        id: terraform_plan
         working-directory: ./infra
         continue-on-error: true
         run: terraform plan -lock=true -no-color
